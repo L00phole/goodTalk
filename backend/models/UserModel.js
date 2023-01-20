@@ -1,9 +1,8 @@
-import mongoose from "mongoose";
-import { ObjectId } from "mongodb";
+const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
   userID: {
-    type: ObjectId,
+    type: mongoose.ObjectId,
   },
   firstName: {
     type: String,
@@ -34,5 +33,6 @@ const UserSchema = new mongoose.Schema({
     maxlength: [30, " The password can't be more than 30 characters long"],
     minLength: [6, "The password must be at least 6 characters long"],
   },
+  admin: Boolean,
 });
-export default mongoose.models.User || mongoose.model("User", UserSchema);
+module.exports = mongoose.model("User", UserSchema);

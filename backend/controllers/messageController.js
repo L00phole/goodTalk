@@ -1,10 +1,13 @@
 const asyncHandler = require("express-async-handler");
+const Message = require("../models/MessageModel");
 
-//Get messades
+//Get messages
 //GET
 const getMessage = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "Get message" });
+  const messages = await Message.find();
+  res.status(200).json(messages);
 });
+
 // set messades
 //POST
 const setMessage = asyncHandler(async (req, res) => {
@@ -12,17 +15,39 @@ const setMessage = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("please add a text field");
   }
-  res.status(200).json({ message: "set message" });
+  const message = await Message.create({ text: req.body.text });
+
+  res.status(200).json(message);
 });
+
 //update messades
 //PUT
 const updateMessage = asyncHandler(async (req, res) => {
+  const message = await Message.findById(req.params.id);
+
+  if (!message) {
+    res.status(400);
+    throw new Error("message not found");
+  }
+  const updateMessage = await Message.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
   res.status(200).json({ message: `update message ${req.params.id}` });
 });
+
 //delete messades
 //DELETE
 const deleteMessage = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: `delete message ${req.params.id}` });
+  const message = await Message.findById(req.params.id);
+  if (!message) {
+    res.status(400);
+    throw new Error("message not found");
+  }
+
+  await message.remove();
+  res.status(200).json({ id: req.params.id });
 });
 
 module.exports = {
