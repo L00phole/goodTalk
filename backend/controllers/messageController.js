@@ -8,7 +8,7 @@ const getMessage = asyncHandler(async (req, res) => {
   res.status(200).json(messages);
 });
 
-// set messades
+// set messages
 //POST
 const setMessage = asyncHandler(async (req, res) => {
   if (!req.body.text) {
@@ -20,7 +20,7 @@ const setMessage = asyncHandler(async (req, res) => {
   res.status(200).json(message);
 });
 
-//update messades
+//update messages
 //PUT
 const updateMessage = asyncHandler(async (req, res) => {
   const message = await Message.findById(req.params.id);
@@ -37,7 +37,7 @@ const updateMessage = asyncHandler(async (req, res) => {
   res.status(200).json({ message: `update message ${req.params.id}` });
 });
 
-//delete messades
+//delete messages
 //DELETE
 const deleteMessage = asyncHandler(async (req, res) => {
   const message = await Message.findById(req.params.id);
