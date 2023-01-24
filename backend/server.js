@@ -12,7 +12,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/message", require("./routes/messageRoute"));
-app.use("/api/users", require("./routes/userRoute"));
+app.use("/api/user", require("./routes/userRoute"));
+app.use("/api/participant", require("./routes/participantRoute"));
+app.use("/api/chatRoom", require("./routes/chatRoomRoute"));
 
 app.use(errorHandler);
 

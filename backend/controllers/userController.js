@@ -8,13 +8,9 @@ const getUser = asyncHandler(async (req, res) => {
   res.status(200).json(users);
 });
 
-// set user
+// add user
 //POST
 const setUser = asyncHandler(async (req, res) => {
-  if (!req.body.text) {
-    res.status(400);
-    throw new Error("please add a text field");
-  }
   const user = await User.create({ text: req.body.text });
 
   res.status(200).json(user);

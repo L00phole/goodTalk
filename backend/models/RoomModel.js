@@ -10,7 +10,8 @@ const ChatRoomSchema = new mongoose.Schema({
     maxlength: [30, " Name cannot be more than 30 characters"],
   },
   participants: {
-    type: [participantSchema],
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Participant",
   },
 });
 
