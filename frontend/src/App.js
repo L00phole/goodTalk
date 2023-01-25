@@ -12,7 +12,7 @@ function App() {
           <Header />
           <div className="bg-cyan-100 w-full h-screen">
             <Routes>
-              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<Login />} />
               <Route path="/register" element={<Register />} />
             </Routes>
           </div>

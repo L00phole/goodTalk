@@ -1,4 +1,5 @@
 import React from 'react'
+// eslint-disable-next-line
 import { useState, UseEffect } from 'react'
 import { FaSignInAlt } from 'react-icons/fa'
 
@@ -19,7 +20,7 @@ function Login() {
       [e.target.name]: e.target.value,
     }))
   }
-
+// eslint-disable-next-line
   const onSubmit = (e) => {
     e.preventDefault()
   }

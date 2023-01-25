@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node backend/server.js",
-    "server": "nodemon backend/server.js", 
-    "client": "npm start --prefix frontend"
+    "server": "nodemon backend/server.js",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
@@ -28,5 +29,8 @@
     "url": "https://github.com/L00phole/goodTalk/issues"
   },
   "homepage": "https://github.com/L00phole/goodTalk#readme",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
 }
