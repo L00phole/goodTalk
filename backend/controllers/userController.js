@@ -5,7 +5,15 @@ const User = require("../models/UserModel");
 //GET
 const getUser = asyncHandler(async (req, res) => {
   const users = await User.find();
-  res.status(200).json(users);
+
+  // OUR FIRST ACL RULE
+  // only allow a logged in user with the role "user" to see the list of
+  // + we should really change this to only admin/superAdmins soon
+  if (req.session.user && req.session.user.userRole === "admin") {
+    res.status(200).json(users);
+  } else {
+    res.status(403).json({ _error: "Not allowed" });
+  }
 });
 
 // add user

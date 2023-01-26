@@ -5,10 +5,15 @@ const {
   setMessage,
   updateMessage,
   deleteMessage,
+  getMessageById,
 } = require("../controllers/messageController");
 
 router.route("/").get(getMessage).post(setMessage);
 
-router.route("/:id").delete(deleteMessage).put(updateMessage);
+router
+  .route("/:id")
+  .delete(deleteMessage)
+  .put(updateMessage)
+  .get(getMessageById);
 
 module.exports = router;

@@ -8,6 +8,11 @@ const getMessage = asyncHandler(async (req, res) => {
   res.status(200).json(messages);
 });
 
+const getMessageById = asyncHandler(async (req, res) => {
+  const message = await Message.findById(req.params.id);
+  res.status(200).json(message);
+});
+
 // set messages
 //POST
 const setMessage = asyncHandler(async (req, res) => {
@@ -55,4 +60,5 @@ module.exports = {
   setMessage,
   updateMessage,
   deleteMessage,
+  getMessageById,
 };
