@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
-  userID: {
-    type: mongoose.ObjectId,
-  },
   firstName: {
     type: String,
     required: [true, "Please provide a firstname for this user."],
@@ -33,6 +30,10 @@ const UserSchema = new mongoose.Schema({
     maxlength: [30, " The password can't be more than 30 characters long"],
     minLength: [6, "The password must be at least 6 characters long"],
   },
-  admin: Boolean,
+  userRole: {
+    type: String,
+    required: true,
+    maxlength: 20,
+  },
 });
 module.exports = mongoose.model("User", UserSchema);

@@ -2,14 +2,6 @@ const mongoose = require("mongoose");
 
 const MessageSchema = new mongoose.Schema(
   {
-    messageID: {
-      type: mongoose.ObjectId,
-    },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "User",
-    },
     text: {
       type: String,
       required: true,
@@ -17,9 +9,11 @@ const MessageSchema = new mongoose.Schema(
     },
     userID: {
       type: mongoose.ObjectId,
+      ref: "User",
     },
     roomID: {
       type: mongoose.ObjectId,
+      ref: "Room",
     },
   },
   {

@@ -1,15 +1,16 @@
 const mongoose = require("mongoose");
 
 const ParticipantSchema = new mongoose.Schema({
-  participantID: {
-    type: mongoose.ObjectId,
-  },
   userID: {
     type: mongoose.ObjectId,
+    ref: "User",
   },
   chatRoomID: {
     type: mongoose.ObjectId,
+    ref: "Room",
   },
-  isBlocked: Boolean,
+  isOwner: Boolean,
+  isBlocked:
+    Boolean /* needed ? or remove completely from room participants? */,
 });
 module.exports = mongoose.model("Participant", ParticipantSchema);
