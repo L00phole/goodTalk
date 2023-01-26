@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import { FaUser } from 'react-icons/fa'
 
+
 function Register() {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -22,6 +23,19 @@ function Register() {
 
   const onSubmit = (e) => {
     e.preventDefault()
+
+    if (password !== passwordConfirm) {
+      throw new Error('password do not match')
+    } else {
+      const userData = {
+        firstName,
+        lastName,
+        email,
+        password,
+      }
+     
+
+    }
   }
   return (
     <>
