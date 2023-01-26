@@ -13,7 +13,7 @@ function Header() {
       
       <ul className=' flex '>
         <li className='px-2'>
-          <Link to='/' className='flex items-center'>
+          <Link to='/login' className='flex items-center'>
             <FaSignInAlt/><p className='pl-1'>Login</p> 
           </Link>
         </li>

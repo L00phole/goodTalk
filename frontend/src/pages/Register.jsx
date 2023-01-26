@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { FaUser } from 'react-icons/fa'
-
+import {Link} from 'react-router-dom'
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -62,14 +62,14 @@ function Register() {
           <div className="p-2">
             <input type="password" className="form-control place-content-center px-2 rounded-md border-2 border-slate-600" id="passwordConfirm" name='passwordConfirm' value={passwordConfirm} placeholder="Confirm password " onChange={onChange} />
           </div>
-          <div className="rounded bg-cyan-200 border-2 border-slate-600/50 justify-center flex mt-2 mx-2 py-1 bg-black">
+          <div className="rounded bg-cyan-200 border-2 border-slate-600/50 hover:bg-slate-700 justify-center flex mt-2 mx-2 py-1 bg-black">
             <button type='submit' className="text-white font-bold">
 submit
             </button>
            </div>
-          
-          
-         
+          <Link to='/login' className='flex items-center justify-center m-2 hover:text-blue-600 underline'>
+             <p className='pl-1'>Or login here</p>
+          </Link> 
         </form>
 
       </section>
