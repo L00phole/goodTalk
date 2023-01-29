@@ -6,6 +6,7 @@ const colors = require("colors");
 const connectDB = require("./config/db");
 const session = require("express-session");
 const loginAndRegisterRoutes = require("./loginAndRegisterRoutes");
+const MongoStore = require("connect-mongo");
 
 connectDB();
 const app = express();
@@ -21,6 +22,9 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: { secure: "auto" },
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+    }),
   })
 );
 

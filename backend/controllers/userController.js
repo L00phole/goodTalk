@@ -16,6 +16,12 @@ const getUser = asyncHandler(async (req, res) => {
   }
 });
 
+//GET single user by ID
+
+const getUserById = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  res.status(200).json(user);
+});
 // add user
 //POST
 const setUser = asyncHandler(async (req, res) => {
@@ -57,4 +63,5 @@ module.exports = {
   setUser,
   updateUser,
   deleteUser,
+  getUserById,
 };

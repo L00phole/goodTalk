@@ -7,7 +7,8 @@ const getMessage = asyncHandler(async (req, res) => {
   const messages = await Message.find();
   res.status(200).json(messages);
 });
-
+//GET id
+//get message by ID
 const getMessageById = asyncHandler(async (req, res) => {
   const message = await Message.findById(req.params.id);
   res.status(200).json(message);
