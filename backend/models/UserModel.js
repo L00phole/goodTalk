@@ -1,12 +1,9 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const UserSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: [true, "Please provide a firstname for this user."],
-    maxlength: [60, " Firstname cannot be more than 60 characters"],
-  },
-  lastName: {
+
+  username: {
     type: String,
     required: [true, "Please provide a lastname for this user."],
     maxlength: [60, "Lastname cannot be more than 60 characters"],
@@ -27,13 +24,20 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please choose a password"],
-    maxlength: [30, " The password can't be more than 30 characters long"],
-    minLength: [8, "The password must be at least 6 characters long"],
-  },
-  userRole: {
-    type: String,
-    default: "user",
-    maxlength: 20,
   },
 });
-module.exports = mongoose.model("User", UserSchema);
+
+UserSchema.methods.matchPassword = async function (inputPassword) {
+  return await bcrypt.compare(inputPassword, this.password);
+};
+
+UserSchema.pre('save', async function (next) {
+  if (!this.isModified) {
+    next();
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+export default mongoose.model("User", UserSchema);
