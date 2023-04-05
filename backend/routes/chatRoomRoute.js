@@ -1,15 +1,21 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
-const {
-  getChatRoom,
-  setChatRoom,
-  updateChatRoom,
-  deleteChatRoom,
-} = require("../controllers/ChatRoomController");
+import {
+ 
+  getChat,
+  getChats,
+  createGroup,
+  removeFromGroup,
+  renameGroup,
+  addUserToGroup,
+} from "../controllers/ChatRoomController.js";
 
-router.route("/").get(getChatRoom).post(setChatRoom);
+router.route("/").post(getChat).get(getChats);
+router.route("/createRoom").post(createGroup);
+router.route("/updateRoom").patch(renameGroup);
+router.route("/removeFromGroup").patch(removeFromGroup);
+router.route("/addUserToGroup").patch(addUserToGroup);
 
-router.route("/:id").delete(deleteChatRoom).put(updateChatRoom);
 
-module.exports = router;
+export default router;

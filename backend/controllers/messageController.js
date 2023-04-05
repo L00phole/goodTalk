@@ -1,65 +1,43 @@
-const asyncHandler = require("express-async-handler");
-const Message = require("../models/MessageModel");
+import Message from "../models/MessageModel.js";
+import User from "../models/UserModel.js";
+import Chat from "../models/RoomModel.js";
+import { StatusCodes } from "http-status-codes";
 
-//Get messages
-//GET
-const getMessage = asyncHandler(async (req, res) => {
-  const messages = await Message.find();
-  res.status(200).json(messages);
-});
-//GET id
-//get message by ID
-const getMessageById = asyncHandler(async (req, res) => {
-  const message = await Message.findById(req.params.id);
-  res.status(200).json(message);
-});
+const sendMessage = async (req, res) => {
+  const { message, chatId } = req.body;
 
-// set messages
-//POST
-const setMessage = asyncHandler(async (req, res) => {
-  if (!req.body.text) {
-    res.status(400);
-    throw new Error("please add a text field");
-  }
-  const message = await Message.create({ text: req.body.text });
-
-  res.status(200).json(message);
-});
-
-//update messages
-//PUT
-const updateMessage = asyncHandler(async (req, res) => {
-  const message = await Message.findById(req.params.id);
-
-  if (!message) {
-    res.status(400);
-    throw new Error("message not found");
-  }
-  const updateMessage = await Message.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true }
-  );
-  res.status(200).json({ message: `update message ${req.params.id}` });
-});
-
-//delete messages
-//DELETE
-const deleteMessage = asyncHandler(async (req, res) => {
-  const message = await Message.findById(req.params.id);
-  if (!message) {
-    res.status(400);
-    throw new Error("message not found");
+  if (!message || !chatId) {
+    return BadRequestError("Please Provide All Fields To send Message");
   }
 
-  await message.remove();
-  res.status(200).json({ id: req.params.id });
-});
+  let newMessage = {
+    userID: req.user.id,
+    message: message,
+    room: chatId,
+  };
 
-module.exports = {
-  getMessage,
-  setMessage,
-  updateMessage,
-  deleteMessage,
-  getMessageById,
+  let m = await Message.create(newMessage);
+
+  m = await m.populate("userID", "username");
+  m = await m.populate("chat");
+  m = await User.populate(m, {
+    path: "chat.users",
+    select: "username email _id",
+  });
+
+  await Chat.findByIdAndUpdate(chatId, { latestMessage: m }, { new: true });
+
+  res.status(StatusCodes.OK).json(m);
 };
+
+const allMessages = async (req, res) => {
+  const { chatId } = req.params;
+
+  const getMessage = await Message.find({ chat: chatId })
+    .populate("userID", "username email _id")
+    .populate("chat");
+
+  res.status(StatusCodes.OK).json(getMessage);
+};
+
+export { allMessages, sendMessage };

@@ -1,19 +1,10 @@
-const express = require("express");
+import express from "express";
+import { allMessages,sendMessage } from "../controllers/messageController.js";
 const router = express.Router();
-const {
-  getMessage,
-  setMessage,
-  updateMessage,
-  deleteMessage,
-  getMessageById,
-} = require("../controllers/messageController");
 
-router.route("/").get(getMessage).post(setMessage);
 
-router
-  .route("/:id")
-  .delete(deleteMessage)
-  .put(updateMessage)
-  .get(getMessageById);
+router.route("/:chatId").get(allMessages)
+router.route("/").post(sendMessage);
 
-module.exports = router;
+
+export default router;

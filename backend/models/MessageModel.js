@@ -1,23 +1,23 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const MessageSchema = new mongoose.Schema(
   {
-    text: {
+    message: {
       type: String,
       required: true,
       maxlength: [150, "Message cannot be more than 150 characters"],
     },
-    userID: {
-      type: mongoose.ObjectId,
+    sender: {
+      type: mongoose.Types.ObjectId,
       ref: "User",
     },
-    roomID: {
-      type: mongoose.ObjectId,
-      ref: "Room",
+    chat: {
+      type: mongoose.Types.ObjectId,
+      ref: "Chat",
     },
   },
   {
     timestamps: true,
   }
 );
-module.exports = mongoose.model("Message", MessageSchema);
+export default mongoose.model("Message", MessageSchema);
