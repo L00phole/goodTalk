@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import { body, validationResult } from "express-validator";
 import User from "../models/UserModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -7,13 +8,24 @@ import createError from 'http-errors';
 const { BadRequest } = createError;
 
 const register = async (req, res) => {
+
+  await body("username").islength({min : 5}).trim().notEmpty().escape().run(req);
+  await body("email").isEmail().normalizeEmail().run(req);
+  await body("password").isLength({ min: 8 }).trim().escape().run(req);
+  
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+  }
+
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
     throw new BadRequest("Please Provide All Values");
   }
 
-  const isUserExists = await User.findOne({ email: email });
+  const isUserExists = await User.findOne({ email: email }).lean();
 
   if (isUserExists) {
     throw new BadRequest("User with this Email Already Exists");
@@ -57,7 +69,7 @@ const login = async (req, res) => {
 
   const isUser = await User.findOne({
     $or: [{ email: email }, { username: username }],
-  });
+  }).lean();
 
   if (!isUser) {
     throw new createError.NotFound("Invalid Credentials");
@@ -93,6 +105,13 @@ const login = async (req, res) => {
 };
 
 const searchUser = async (req, res) => {
+  await query("search").isLength({ min: 3 }).trim().escape().run(req);
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+  }
+  
   const { search } = req.query;
 
   const user = await User.find({

@@ -1,10 +1,10 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Header from "./components/Header";
-import Login from "./pages/Login";
-import MyPage from "./pages/MyPage";
+import Chat from "./pages/Chat";
+import Error from "./pages/Error";
 import Register from "./pages/Register";
-import ChatProvider from './context/ChatProvider';
+import {ChatProvider} from './context/ChatProvider';
 
 const App = () => (
   <div>
@@ -14,8 +14,9 @@ const App = () => (
         <ChatProvider>
           <Routes>
             <Route path="/" element={<MyPage />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Chat />} />
             <Route path="/register" element={<Register />} />
+            <Route path="*" element={<Error />} />
           </Routes>
         </ChatProvider>
       </div>

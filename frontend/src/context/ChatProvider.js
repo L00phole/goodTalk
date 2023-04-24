@@ -1,41 +1,37 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getUserFromLocalStorage } from "../utils/localstorage";
 
 const ChatContext = createContext();
 
 const ChatProvider = ({ children }) => {
-  const [user, setUser] = useState();
   const [selectedChat, setSelectedChat] = useState();
-  const [chats, setChats] = useState([]);
+  const [user, setUser] = useState();
   const [notification, setNotification] = useState([]);
-  const [fetchAgain, setFetchAgain] = useState(false);
-  const [loggedUser, setLoggedUser] = useState();
+  const [chats, setChats] = useState();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    setUser(userInfo);
-    if (!userInfo && navigate !== undefined) {
-      navigate('/');
+    const loggedInUser = getUserFromLocalStorage("user");
+    setUser(loggedInUser);
+
+    if (!loggedInUser) {
+      navigate("/register");
     }
   }, [navigate]);
 
   return (
     <ChatContext.Provider
       value={{
-        user,
-        setUser,
         selectedChat,
         setSelectedChat,
-        chats,
-        setChats,
+        user,
+        setUser,
         notification,
         setNotification,
-        fetchAgain,
-        setFetchAgain,
-        loggedUser,
-        setLoggedUser,
+        chats,
+        setChats,
       }}
     >
       {children}
@@ -43,8 +39,8 @@ const ChatProvider = ({ children }) => {
   );
 };
 
-export const ChatState = () => {
+const useAppContext = () => {
   return useContext(ChatContext);
 };
 
-export default ChatProvider;
+export { ChatProvider, useAppContext };
