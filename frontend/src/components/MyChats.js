@@ -17,7 +17,7 @@ const MyChats = ({ fetchAgain }) => {
 
   const fetchChats = useCallback(async () => {
     try {
-      const { data } = await api.get("/api/v1/chat");
+      const { data } = await api.get("/api/chat");
       setChats(data);
     } catch (error) {
       toast.error(error);

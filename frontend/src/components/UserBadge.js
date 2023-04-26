@@ -1,4 +1,4 @@
-import { CloseIcon } from "@mui/material/Icon";
+import { Close } from "@mui/icons-material";
 import { Badge } from "@mui/material";
 
 const UserBadgeItem = ({ user, handleFunction, admin }) => {
@@ -11,13 +11,13 @@ const UserBadgeItem = ({ user, handleFunction, admin }) => {
       mb={2}
       variant="solid"
       fontSize={12}
-      colorScheme="purple"
+      color="purple"
       cursor="pointer"
       onClick={handleFunction}
     >
       {user.username}
       {admin === user._id && <span> (Admin)</span>}
-      <CloseIcon pl={1} />
+      <Close pl={1} />
     </Badge>
   );
 };

@@ -6,17 +6,18 @@ import {
   DialogActions,
   DialogContent,
   Button,
-  IconButton,
   FormControl,
   Input,
   Box,
-  CirkularProgress,
+  CircularProgress,
 } from "@mui/material";
+
+import IconButton from '@mui/material/IconButton';
 import api from "../utils/axios";
 import UserBadgeItem from "./UserBadge";
 import UserListItem from "./UserListItem";
 import { useAppContext } from "../context/ChatProvider";
-import { Visibility, CloseIcon } from "@mui/material/Icon";
+import { Visibility, Close } from "@mui/icons-material";
 import { toast } from "react-toastify";
 
 const UpdateGroupChatModel = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
@@ -38,7 +39,7 @@ const UpdateGroupChatModel = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
     try {
       setLoading(true);
 
-      const { data } = await api.patch(`/api/v1/chat/removeFromGroup`, {
+      const { data } = await api.patch(`/api/chat/removeFromGroup`, {
         chatId: selectedChat._id,
         userId: user1._id,
       });
@@ -63,7 +64,7 @@ const UpdateGroupChatModel = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
     try {
       setLoading(true);
 
-      const { data } = await api.get(`/api/v1/auth/users?search=${search}`);
+      const { data } = await api.get(`/api/auth/users?search=${search}`);
 
       setLoading(false);
       setSearchResult(data);
@@ -78,7 +79,7 @@ const UpdateGroupChatModel = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
     try {
       setRenameLoading(true);
 
-      const { data } = await api.patch(`/api/v1/chat/renameGroup`, {
+      const { data } = await api.patch(`/api/chat/renameGroup`, {
         chatId: selectedChat._id,
         chatName: groupChatName,
       });
@@ -107,7 +108,7 @@ const UpdateGroupChatModel = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
     try {
       setLoading(true);
 
-      const { data } = await api.patch(`/api/v1/chat/addUserToGroup`, {
+      const { data } = await api.patch(`/api/chat/addUserToGroup`, {
         chatId: selectedChat._id,
         userId: user1._id,
       });
@@ -144,7 +145,7 @@ const UpdateGroupChatModel = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
 
           <IconButton
            display={{ base: "flex" }}
-           icon={<CloseIcon />}
+           icon={<Close />}
            onClick={()=> setIsOpen(true)}/>
           <DialogContent
             display="flex"
@@ -171,14 +172,14 @@ const UpdateGroupChatModel = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
               />
               <Button
                 variant="solid"
-                colorScheme="teal"
+                color="teal"
                 background=" rgba(67, 43, 255, 0.8)"
                 _hover={{
                   background: " rgba(67, 43, 255, 0.8)",
                   color: "white",
                 }}
                 ml={1}
-                isLoading={renameloading}
+                loading={renameloading}
                 onClick={handleRename}
               >
                 Update
@@ -193,7 +194,7 @@ const UpdateGroupChatModel = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
             </FormControl>
 
             {loading ? (
-              <CirkularProgress size="lg" />
+              <CircularProgress size="lg" />
             ) : (
               searchResult?.map((user) => (
                 <UserListItem
@@ -208,7 +209,7 @@ const UpdateGroupChatModel = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
             <Button
               fontFamily="Poppins"
               onClick={() => handleRemove(user)}
-              colorScheme="red"
+              color="red"
             >
               Leave Group
             </Button>

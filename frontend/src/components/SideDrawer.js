@@ -57,7 +57,7 @@ const SideDrawer = () => {
     try {
       setLoading(true);
 
-      const { data } = await api.get(`/api/v1/auth/users?search=${search}`);
+      const { data } = await api.get(`/api/auth/users?search=${search}`);
 
       setLoading(false);
       setSearchResult(data);
@@ -70,7 +70,7 @@ const SideDrawer = () => {
     try {
       setLoadingChat(true);
 
-      const { data } = await api.post(`/api/v1/chat`, { userId });
+      const { data } = await api.post(`/api/chat`, { userId });
 
       if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
       setSelectedChat(data);

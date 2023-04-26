@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/ChatProvider";
 import { SideDrawer, MyChats, ChatBox } from "../components";
-import { Box } from "@chakra-ui/react";
+import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { getUserFromLocalStorage } from "../utils/localstorage ";
+import { getUserFromLocalStorage } from "../utils/localstorage";
 
 const Chat = () => {
   const { user } = useAppContext();

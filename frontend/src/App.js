@@ -13,7 +13,6 @@ const App = () => (
       <div className="bg-cyan-100 w-full h-screen">
         <ChatProvider>
           <Routes>
-            <Route path="/" element={<MyPage />} />
             <Route path="/" element={<Chat />} />
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<Error />} />

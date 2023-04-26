@@ -48,7 +48,7 @@ const ProfileModal = ({ user, children }) => {
               {user.username}
             </Typography>
           
-            <Typography fontSize={{ base: "28px", md: "30px" }} fontFamily="Poppins">
+            <Typography component={'span'} fontSize={{ base: "28px", md: "30px" }} fontFamily="Poppins">
               Email: {user.email}
             </Typography>
           </DialogContent>

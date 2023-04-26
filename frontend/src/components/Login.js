@@ -1,66 +1,102 @@
-import React from 'react'
-// eslint-disable-next-line
-import { useState, UseEffect } from 'react'
-import { FaSignInAlt } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 
+import { Button, Stack } from "@mui/material";
+import { FormControl, FormLabel } from "@mui/material";
+import { TextField, InputAdornment } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 
-function Login() {
-  const [formData, setFormData] = useState({
-    
-    email: '',
-    password: '',
- 
-  })
+import api from "../utils/axios";
+import { addUserToLocalStorage } from "../utils/localstorage";
 
-  const {   email, password  } = formData
-  
-  const onChange = (e) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }))
-  }
-// eslint-disable-next-line
-  const onSubmit = (e) => {
-    e.preventDefault()
-  }
+const Login = () => {
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
+
+  const [values, setValues] = useState({
+    email: "",
+    password: "",
+    loading: "false",
+  });
+
+  const navigate = useNavigate();
+
+  const submitHandler = async () => {
+    setValues({ ...values, loading: true });
+    const { email, password } = values;
+    if (!email || !password) {
+      toast.error("Please Fill All the Fields");
+      setValues({ ...values, loading: false });
+      return;
+    }
+    try {
+      const { data } = await api.post("/api/auth/login", {
+        email,
+        password,
+      });
+      
+      toast.success(`Welcome Back! ${data.username}`);
+      addUserToLocalStorage(data);
+      setValues({ ...values, loading: false });
+      navigate("/");
+    } catch (error) {
+      toast.error(error.response.data.msg);
+      setValues({ ...values, loading: false });
+    }
+  };
+  // console.log(values);
   return (
-    <>
-      <section className="flex place-content-center ">
-      <div className="p-3  items-center  pb-8">
-          <h1 className="flex items-center font-medium"><FaSignInAlt />Login</h1>
-          <p> Login to start Chatting</p>
-        </div>
-      </section>
-      <section className="place-content-center grid ">
-        <form onSubmit={onSubmit} >
-           
-            
-           <div className="p-2">
-            <input type="email" className="form-control place-content-center px-2 rounded-md border-2 border-slate-600" id="email" name='email' value={email} placeholder="Enter email" onChange={onChange} />
-          </div>
-           <div className="p-2">
-            <input type="password" className="form-control place-content-center px-2 rounded-md border-2 border-slate-600" id="password" name='password' value={password} placeholder="Enter password" onChange={onChange} />
-          </div>
+    <Stack spacing="10px" fontFamily="Poppins">
+      <FormControl id="email" required>
+        <FormLabel>email</FormLabel>
+        <TextField
+          value={values.email}
+          type="email"
+          placeholder="email"
+          onChange={(e) => setValues({ ...values, email: e.target.value })}
+        />
+      </FormControl>
+      <FormControl id="password" required>
+        <FormLabel>password</FormLabel>
+        <FormControl size="md">
+          <TextField
+            value={values.password}
+            onChange={(e) => setValues({ ...values, password: e.target.value })}
+            type={show ? "text" : "password"}
+            placeholder="password"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Button
+                    size="small"
+                    onClick={handleClick}
+                  >
+                    {show ? "Hide" : "Show"}
+                  </Button>
+                </InputAdornment>
+              ),
+            }}
+          />
           
-          <div className="rounded bg-cyan-200 border-2 border-slate-600/50 justify-center flex mt-2 mx-2 py-1 bg-black hover:bg-slate-700">
-            <button type='submit' className="text-white font-bold ">
-submit
-            </button>
-           </div>
-          <Link to='/register' className='flex items-center justify-center m-2 hover:text-blue-600 underline'>
-             <p className='pl-1'>Or register here</p>
-              
-          </Link>
-          
-         
-        </form>
+        </FormControl>
+      </FormControl>
+      <Button
+        onClick={submitHandler}
+        loading={values.loading}
+      >
+        Login
+      </Button>
+      <Button
+        variant="solid"
+       
+        onClick={() => {
+          setValues({ email: "test@gmail.com", password: "t1s25!96" });
+        }}
+      >
+        Login For Test
+      </Button>
+    </Stack>
+  );
+};
 
-      </section>
-    </>
-  )
-}
-
-
-export default Login
+export default Login;

@@ -9,7 +9,7 @@ const { BadRequest } = createError;
 
 const register = async (req, res) => {
 
-  await body("username").islength({min : 5}).trim().notEmpty().escape().run(req);
+  await body("username").isLength({min : 5}).trim().notEmpty().escape().run(req);
   await body("email").isEmail().normalizeEmail().run(req);
   await body("password").isLength({ min: 8 }).trim().escape().run(req);
   

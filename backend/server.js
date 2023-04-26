@@ -2,11 +2,15 @@ import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import "express-async-errors";
+import helmet from "helmet";
+import xss from "xss-clean";
+import mongoSanitize from "express-mongo-sanitize";
+import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 import {notFound} from "./middleware/errorMiddleware.js";
-import auth from "./middleware/authMiddleware.js";
+import authentication from "./middleware/authMiddleware.js";
 import connectDB from "./config/db.js";
 import userRoute from "./routes/userRoute.js";
 import messageRoute from "./routes/messageRoute.js";
@@ -15,13 +19,18 @@ import chatRoomRoute from "./routes/chatRoomRoute.js";
 const app = express();
 app.use(express.json());
 
+app.use(cors());
+app.use(helmet());
+app.use(xss());
+app.use(mongoSanitize());
+
 app.get('/', (req, res) => {
   res.send('Server running!');
 });
 
 app.use('/api/user', userRoute);
-app.use('/api/chat', chatRoomRoute);
-app.use('/api/message', messageRoute);
+app.use('/api/chat', authentication, chatRoomRoute);
+app.use('/api/message', authentication, messageRoute);
 
 app.use(errorHandler);
 app.use(notFound);
@@ -46,7 +55,7 @@ const start = async () => {
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    origin: 'http://localhost:3000',
+    origin: '*',
   },
 });
 

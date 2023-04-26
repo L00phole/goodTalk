@@ -6,9 +6,8 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/axios";
 import { addUserToLocalStorage } from "../utils/localstorage";
-import { FormControl, InputLabel, Input, FormGroup,IconButton, InputAdornment, Button } from "@mui/material";
+import { FormControl, FormGroup,IconButton, InputAdornment, Button, Stack, TextField, Grid, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-
 
 const Registration = () => {
   const [show, setShow] = useState(false);
@@ -19,9 +18,9 @@ const Registration = () => {
     event.preventDefault();
   };
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+  const [values, setValues] = useState({
+    username: "",
+    fullName: "",
     email: "",
     password: "",
     passwordConfirm: "",
@@ -34,25 +33,25 @@ const Registration = () => {
   //     }))
   //   }
 
-  const onSubmit = async () => {
-    const { firstName, lastName, email, password, passwordConfirm } = formData;
+  const submitHandler = async () => {
+    const { username, fullName, email, password, passwordConfirm } = values;
 
-    if (password !== passwordConfirm) {
-      throw new Error("password do not match");
-    }
-    if (!firstName || !lastName || !email || !password || !passwordConfirm) {
+    // if (password !== passwordConfirm) {
+    //   throw new Error("password do not match");
+    // }
+    if (!username || !fullName || !email || !password || !passwordConfirm) {
       toast.error("Please fill in all fields");
       return;
     }
     try {
-      const { userData } = await api.post("/api/auth/register", {
-        firstName,
-        lastName,
+      const { data } = await api.post("/api/auth/register", {
+        username,
+        fullName,
         email,
         password,
       });
-      toast.success(`Hi There! ${userData.firstName}`);
-      addUserToLocalStorage(userData);
+      toast.success(`Hi There! ${data.username}`);
+      addUserToLocalStorage(data);
       navigate("/");
     } catch (error) {
       toast.error(error.response.data.message);
@@ -61,100 +60,108 @@ const Registration = () => {
 
   return (
     <>
-      <section className="flex place-content-center ">
-        <div className="p-3  items-center justify-between pb-8">
-          <h1 className="flex items-center font-medium">
-            <FaUser />
+      <Stack spacing={1} marginBottom={4}>
+        <Grid justifyContent={"center"} alignItems={"center"} display={"flex"} >
+          <FaUser />
+          <Typography>
             REGISTER
-          </h1>
-          <p>Please create a new account</p>
-        </div>
-      </section>
-      <section className="place-content-center grid ">
-        <form>
-          <FormControl id="firstName" isRequired className="p-2">
-            <InputLabel htmlFor="firstname">Firstname</InputLabel>
-            <Input
+          </Typography></Grid>
+        <Grid justifyContent={"center"} alignItems={"center"} display={"flex"} >
+          <Typography>Please create a new account</Typography>
+        </Grid>
+      </Stack>
+      <Stack spacing={2} className="place-content-center grid ">
+          <FormControl id="username" required >
+            <TextField
               type="text"
-              className="form-control place-content-center px-2 rounded-md border-2 border-slate-600"
-              id="firstName"
-              name="firstName"
-              placeholder="Enter firstname"
+              placeholder="Enter username"
               onChange={(e) =>
-                setFormData({ ...formData, firstName: e.target.value })
+                setValues({ ...values, username: e.target.value })
               }
             />
           </FormControl>
-          <FormControl isRequired id="lastName" className="p-2">
-            <InputLabel htmlFor="lastname">Lastname</InputLabel>
-            <Input
+          <FormControl required id="fullName" className="py-9">
+            <TextField
               type="text"
-              className="form-control place-content-center px-2 rounded-md border-2 border-slate-600"
-              id="lastName"
-              name="lastName"
-              placeholder="Enter lastname"
+             
+              id="fullName"
+              name="fullName"
+              placeholder="Enter fullName"
               onChange={(e) =>
-                setFormData({ ...formData, lastName: e.target.value })
+                setValues({ ...values, fullName: e.target.value })
               }
             />
           </FormControl>
-          <FormControl id="email" isRequired className="p-2">
-            <InputLabel htmlFor="email">Email</InputLabel>
-            <Input
+          <FormControl id="email" required className="p-2">
+            <TextField
               type="email"
-              className="form-control place-content-center px-2 rounded-md border-2 border-slate-600"
+             
               id="email"
               name="email"
               placeholder="Enter email"
               onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
+                setValues({ ...values, email: e.target.value })
               }
             />
           </FormControl>
-          <FormControl id="password" isRequired className="p-2">
-            <InputLabel htmlFor="password">Password</InputLabel>
+          <FormControl id="password" required className="p-2">
             <FormGroup>
-              <Input
+              <TextField
                 type={show ? "text" : "password"}
-                endAdornment={
-                    <InputAdornment position="end">
-                        <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClick}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                        >
-                            {show ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                    </InputAdornment>
-                }
-                className="form-control place-content-center px-2 rounded-md border-2 border-slate-600"
+                InputProps={{
+                  endAdornment:(
+                  <InputAdornment position="end" >
+                      <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClick}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                      >
+                          {show ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                  </InputAdornment>
+                  ),
+                }}
+               
                 id="password"
                 name="password"
                 placeholder="Enter password"
                 onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
+                  setValues({ ...values, password: e.target.value })
                 }
               />
             </FormGroup>
           </FormControl>
-          <FormControl id="passwordConfirm" isRequired className="p-2">
-            <InputLabel htmlFor="passwordConfirm">Confirm password</InputLabel>
+          {/* <FormControl id="passwordConfirm" required className="p-2">
             <FormGroup>
-              <Input
-                type="password"
-                className="form-control place-content-center px-2 rounded-md border-2 border-slate-600"
+              <TextField
+              type={show ? "text" : "password"}
+              InputProps={{
+                endAdornment:(
+                <InputAdornment position="end" >
+                    <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClick}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                    >
+                        {show ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                </InputAdornment>
+                ),
+              }}
+               
                 id="passwordConfirm"
                 name="passwordConfirm"
                 placeholder="Confirm password "
                 onChange={(e) =>
-                  setFormData({ ...formData, passwordConfirm: e.target.value })
+                  setValues({ ...values, passwordConfirm: e.target.value })
                 }
               />
             </FormGroup>
-          </FormControl>
-          <Button className="rounded bg-cyan-200 border-2 border-slate-600/50 hover:bg-slate-700 justify-center flex mt-2 mx-2 py-1 bg-black text-white font-bold"
-              onSubmit={onSubmit}
+          </FormControl> */}
+          <Button 
+              onClick={submitHandler}
               type="submit"
             >
               Sign Up
@@ -165,8 +172,7 @@ const Registration = () => {
           >
             <p className="pl-1">Or login here</p>
           </Link>
-        </form>
-      </section>
+      </Stack>
     </>
   );
 };

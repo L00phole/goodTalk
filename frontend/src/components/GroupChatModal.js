@@ -16,6 +16,8 @@ import { useAppContext } from "../context/ChatProvider";
 import UserBadgeItem from "./UserBadge";
 import UserListItem from "./UserListItem";
 import { toast } from "react-toastify";
+import { purple } from '@mui/material/colors';
+import { styled } from '@mui/material/styles';
 
 const GroupChatModal = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false); // for modal
@@ -36,7 +38,7 @@ const GroupChatModal = ({ children }) => {
     try {
       setLoading(true);
 
-      const { data } = await api.get(`/api/v1/auth/users?search=${search}`);
+      const { data } = await api.get(`/api/auth/users?search=${search}`);
 
       setLoading(false);
       setSearchResult(data);
@@ -65,7 +67,7 @@ const GroupChatModal = ({ children }) => {
     }
 
     try {
-      const { data } = await api.post(`/api/v1/chat/createGroup`, {
+      const { data } = await api.post(`/api/chat/createRoom`, {
         name: groupChatName,
         users: JSON.stringify(selectedUsers.map((u) => u._id)),
       });
@@ -76,7 +78,13 @@ const GroupChatModal = ({ children }) => {
       toast.error("Failed To Create Group");
     }
   };
-
+  const ColorButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.getContrastText(purple[500]),
+    backgroundColor: purple[500],
+    '&:hover': {
+      backgroundColor: purple[700],
+    },
+  }));
   return (
     <>
       <span onClick={()=> setIsOpen(true)}>{children}</span>
@@ -132,18 +140,11 @@ const GroupChatModal = ({ children }) => {
             )}
           </DialogContent>
           <DialogActions>
-            <Button
-              fontFamily="Poppins"
+            <ColorButton
               onClick={handleSubmit}
-              colorScheme="blue"
-              background=" rgba(67, 43, 255, 0.8)"
-              _hover={{
-                background: " rgba(67, 43, 255, 0.8)",
-                color: "white",
-              }}
             >
               Create Chat
-            </Button>
+            </ColorButton>
           </DialogActions>
         </DialogContent>
       </Dialog>

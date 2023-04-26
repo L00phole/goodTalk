@@ -1,4 +1,4 @@
-import { ArrowBackIosIcon } from "@mui/material";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import {
   Box,
   FormControl,
@@ -36,7 +36,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     try {
       setLoading(true);
   
-      const { data } = await api.get(`/api/v1/message/${selectedChat._id}`);
+      const { data } = await api.get(`/api/message/${selectedChat._id}`);
   
       setMessages(data);
       setLoading(false);
@@ -50,7 +50,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     if (e.key === "Enter" && newMessage) {
       socket.emit("stop-typing", selectedChat._id);
       try {
-        const { data } = await api.post(`/api/v1/message/`, {
+        const { data } = await api.post(`/api/message/`, {
           message: newMessage,
           chatId: selectedChat._id,
         });
@@ -176,7 +176,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 <ScrollableChat messages={messages} />
               </div>
             )}
-            <FormControl onKeyDown={sendMessage} h="15%" isRequired mt={3}>
+            <FormControl onKeyDown={sendMessage} h="15%" required={false} mt={3}>
               {isTyping ? <div>Typing ...</div> : <></>}
               <Input
                 variant="filled"
