@@ -64,7 +64,7 @@ const UpdateGroupChatModel = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
     try {
       setLoading(true);
 
-      const { data } = await api.get(`/api/auth/users?search=${search}`);
+      const { data } = await api.get(`/api/user/users?search=${search}`);
 
       setLoading(false);
       setSearchResult(data);

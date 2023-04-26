@@ -23,7 +23,6 @@ const Registration = () => {
     fullName: "",
     email: "",
     password: "",
-    passwordConfirm: "",
   });
 
   //   const onChange = (e) => {
@@ -34,17 +33,26 @@ const Registration = () => {
   //   }
 
   const submitHandler = async () => {
-    const { username, fullName, email, password, passwordConfirm } = values;
+    const { username, fullName, email, password} = values;
 
     // if (password !== passwordConfirm) {
     //   throw new Error("password do not match");
     // }
-    if (!username || !fullName || !email || !password || !passwordConfirm) {
-      toast.error("Please fill in all fields");
+    if (!username || !fullName || !email || !password){
+      toast.error("Please fill in all fields", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
       return;
     }
     try {
-      const { data } = await api.post("/api/auth/register", {
+      const { data } = await api.post("/api/user/register", {
         username,
         fullName,
         email,
@@ -57,7 +65,7 @@ const Registration = () => {
       toast.error(error.response.data.message);
     }
   };
-
+console.log(values);
   return (
     <>
       <Stack spacing={1} marginBottom={4}>
@@ -83,7 +91,6 @@ const Registration = () => {
           <FormControl required id="fullName" className="py-9">
             <TextField
               type="text"
-             
               id="fullName"
               name="fullName"
               placeholder="Enter fullName"

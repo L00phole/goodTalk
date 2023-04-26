@@ -4,7 +4,10 @@ import Header from "./components/Header";
 import Chat from "./pages/Chat";
 import Error from "./pages/Error";
 import Register from "./pages/Register";
-import {ChatProvider} from './context/ChatProvider';
+import { ChatProvider } from './context/ChatProvider';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const App = () => (
   <div>
@@ -17,6 +20,7 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<Error />} />
           </Routes>
+          <ToastContainer position="top-center" />
         </ChatProvider>
       </div>
     </BrowserRouter>

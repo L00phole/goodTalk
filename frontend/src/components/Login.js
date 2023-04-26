@@ -30,7 +30,7 @@ const Login = () => {
       return;
     }
     try {
-      const { data } = await api.post("/api/auth/login", {
+      const { data } = await api.post("/api/user/login", {
         email,
         password,
       });
@@ -82,19 +82,10 @@ const Login = () => {
       </FormControl>
       <Button
         onClick={submitHandler}
-        loading={values.loading}
       >
         Login
       </Button>
-      <Button
-        variant="solid"
-       
-        onClick={() => {
-          setValues({ email: "test@gmail.com", password: "t1s25!96" });
-        }}
-      >
-        Login For Test
-      </Button>
+      
     </Stack>
   );
 };
