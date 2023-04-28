@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/UserModel.js";
-import asyncHandler from "express-async-handler"
+import UnAuthenticatedError from "../errors/unauthenticated.js";
+
 
 // const auth = asyncHandler(async (req, res, next) => {
 // let token;

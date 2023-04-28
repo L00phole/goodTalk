@@ -14,7 +14,7 @@ import { useAppContext } from "../context/ChatProvider";
 import api from "../utils/axios";
 import ProfileModal from "./ProfileModal";
 import ScrollableChat from "./ScrollableChat";
-import UpdateChatRoom from "./UpdateChatRoom";
+import UpdateGroupChat from "./UpdateGroupChat";
 import io from "socket.io-client";
 
 let socket, selectedChatCompare;
@@ -144,7 +144,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             ) : (
               <>
                 {selectedChat.chatName.toUpperCase()}
-                <UpdateChatRoom
+                <UpdateGroupChat
                   fetchAgain={fetchAgain}
                   setFetchAgain={setFetchAgain}
                   fetchMessages={fetchMessages}
@@ -154,7 +154,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           </Typography>
           <Box
             display="flex"
-            flexDir="column"
+            flexDirection="column"
             justifyContent="flex-end"
             p={3}
             bg="#E8E8E8"

@@ -8,17 +8,17 @@ import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { errorHandler } from "./middleware/errorMiddleware.js";
-import {notFound} from "./middleware/errorMiddleware.js";
-import authentication from "./middleware/authMiddleware.js";
+import  errorHandler  from "./middleware/errorMiddleware.js";
+import notFoundMiddleware from "./middleware/not-found.js";
+import authenticateUser from "./middleware/authMiddleware.js";
 import connectDB from "./config/db.js";
 import userRoute from "./routes/userRoute.js";
 import messageRoute from "./routes/messageRoute.js";
-import chatRoomRoute from "./routes/chatRoomRoute.js";
+import chatRoute from "./routes/chatRoute.js";
 
 const app = express();
-app.use(express.json());
 
+app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use(xss());
@@ -29,12 +29,11 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/user', userRoute);
-app.use('/api/chat', authentication, chatRoomRoute);
-app.use('/api/message', authentication, messageRoute);
+app.use('/api/chat', authenticateUser, chatRoute);
+app.use('/api/message', authenticateUser, messageRoute);
 
 app.use(errorHandler);
-app.use(notFound);
-app.use(express.urlencoded({ extended: false }));
+app.use(notFoundMiddleware);
 
 const port = process.env.PORT || 8080;
 

@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-const ChatRoomSchema = new mongoose.Schema(
+const chatSchema = new mongoose.Schema(
   {
-  roomName: {
+  chatName: {
     type: String,
     required: [true, "Please provide a name for this chat room."],
     maxlength: [30, " Name cannot be more than 30 characters"],
@@ -12,16 +12,16 @@ const ChatRoomSchema = new mongoose.Schema(
     default: false,
   },
   users: [
-    { type: mongoose.Schema.ObjectId, 
-      ref: "User", 
-      required: true },
-  ],
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+    }],
   groupAdmin: {
-    type: mongoose.Schema.ObjectId,
+    type: mongoose.Types.ObjectId,
     ref: "User",
   },
   latestMessage: {
-    type: mongoose.Schema.ObjectId,
+    type: mongoose.Types.ObjectId,
     ref: "Message",
   },
   },
@@ -30,4 +30,4 @@ const ChatRoomSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("ChatRoom", ChatRoomSchema);
+export default mongoose.model("Chat", chatSchema);

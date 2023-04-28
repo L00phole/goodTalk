@@ -6,7 +6,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import {
   Modal,
-  Backdrop,
+   
   DialogContent,
   DialogActions,
   Button,
@@ -28,14 +28,14 @@ const ProfileModal = ({ user, children }) => {
           onClick={() => setIsOpen(true)}
         />
       )}
-      <Modal size="lg" onClose={()=> setIsOpen(false)} isOpen={isOpen} isCentered>
-        <Backdrop />
+      <Modal size="lg" onClose={()=> setIsOpen(false)} open={isOpen} isCentered>
+        
         <DialogContent h="440px">
           <CloseIcon />
 
           <DialogContent
             display="flex"
-            flexDir="column"
+            flexDirection="column"
             alignItems="center"
             justifyContent="center"
           >

@@ -44,7 +44,7 @@ const Login = () => {
       setValues({ ...values, loading: false });
     }
   };
-  // console.log(values);
+ 
   return (
     <Stack spacing="10px" fontFamily="Poppins">
       <FormControl id="email" required>
@@ -68,7 +68,7 @@ const Login = () => {
               endAdornment: (
                 <InputAdornment position="end">
                   <Button
-                    size="small"
+                    size="sm"
                     onClick={handleClick}
                   >
                     {show ? "Hide" : "Show"}

@@ -40,7 +40,7 @@ const ContentWrapper = styled.div`
     font-size: 80px;
     background: linear-gradient(110.29deg, #2e5cff 11.11%, #973df0 60.96%);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkitTextFillColor: transparent;
     background-clip: text;
     text-fill-color: transparent;
   }

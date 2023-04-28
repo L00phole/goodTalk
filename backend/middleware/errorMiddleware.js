@@ -1,6 +1,4 @@
-const notFound =  (req, res) =>
-res.status(404).send("Route does not exist");
-
+import { StatusCodes } from "http-status-codes";
 
 const errorHandler = (err, req, res, next) => {
   const defaultError = {
@@ -21,4 +19,4 @@ const errorHandler = (err, req, res, next) => {
 
   res.status(defaultError.statusCode).json({ msg: defaultError.msg });
 };
-export { notFound, errorHandler };
+export default  errorHandler ;

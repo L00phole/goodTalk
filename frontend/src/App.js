@@ -12,8 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const App = () => (
   <div>
     <BrowserRouter>
-      <Header />
-      <div className="bg-cyan-100 w-full h-screen">
+      <div className="bg-sky-100 w-full h-screen">
         <ChatProvider>
           <Routes>
             <Route path="/" element={<Chat />} />

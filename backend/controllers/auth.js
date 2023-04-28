@@ -12,7 +12,7 @@ import {
 
 const register = async (req, res) => {
 
-  await body("username").isLength({min : 5}).trim().notEmpty().escape().run(req);
+  await body("username").isLength({min : 3}).trim().notEmpty().escape().run(req);
   await body("email").isEmail().normalizeEmail().run(req);
   await body("password").isLength({ min: 8 }).trim().escape().run(req);
   
@@ -108,18 +108,22 @@ const login = async (req, res) => {
 };
 
 const searchUser = async (req, res) => {
-  await query("search").isLength({ min: 3 }).trim().escape().run(req);
-  const errors = validationResult(req);
+  // await query("search").isLength({ min: 3 }).trim().escape().run(req);
+  // const errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
-  }
+  // if (!errors.isEmpty()) {
+  //   return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+  // }
   
   const { search } = req.query;
 
   const user = await User.find({
-    username: { $regex: search, $options: "i" },
-  }).select("username _id email bio");
+    $or: [
+      { username: { $regex: search, $options: "i" } },
+      { email: { $regex: search, $options: "i" } },
+      { _id: search },
+    ],
+  }).select("username _id email ");
 
   res.status(StatusCodes.OK).json(user);
 };

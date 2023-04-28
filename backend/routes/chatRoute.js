@@ -9,11 +9,11 @@ import {
   removeFromGroup,
   renameGroup,
   addUserToGroup,
-} from "../controllers/ChatRoomController.js";
+} from "../controllers/chatController.js";
 
 router.route("/").post(getChat).get(getChats);
-router.route("/createRoom").post(createGroup);
-router.route("/updateRoom").patch(renameGroup);
+router.route("/createGroup").post(createGroup);
+router.route("/renameGroup").patch(renameGroup);
 router.route("/removeFromGroup").patch(removeFromGroup);
 router.route("/addUserToGroup").patch(addUserToGroup);
 

@@ -16,6 +16,7 @@ const Chat = () => {
     <div style={{ width: "100%" }}>
       {user && <SideDrawer />}
       <Box
+        marginTop={4}
         display="flex"
         justifyContent="space-between"
         w="100%"

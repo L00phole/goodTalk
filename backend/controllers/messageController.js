@@ -1,6 +1,6 @@
 import Message from "../models/MessageModel.js";
 import User from "../models/UserModel.js";
-import Chat from "../models/RoomModel.js";
+import Chat from "../models/chatModel.js";
 import { StatusCodes } from "http-status-codes";
 
 const sendMessage = async (req, res) => {
@@ -13,7 +13,7 @@ const sendMessage = async (req, res) => {
   let newMessage = {
     userID: req.user.id,
     message: message,
-    room: chatId,
+    chat: chatId,
   };
 
   let m = await Message.create(newMessage);

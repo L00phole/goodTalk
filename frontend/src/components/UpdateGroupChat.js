@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
-  Dialog,
-  Backdrop,
+  Dialog, 
   DialogTitle,
   DialogActions,
   DialogContent,
@@ -127,12 +126,12 @@ const UpdateGroupChatModel = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
     <>
       <IconButton
         display={{ base: "flex" }}
-        icon={<Visibility />}
         onClick={() => setIsOpen(true)}
-      />
+      >
+      <Visibility /></IconButton>
 
-      <Dialog onClose={()=> setIsOpen(false)} isOpen={isOpen} isCentered>
-        <Backdrop />
+      <Dialog onClose={()=> setIsOpen(false)} open={isOpen} isCentered>
+        
         <DialogContent>
           <DialogTitle
             fontSize="35px"
@@ -145,11 +144,12 @@ const UpdateGroupChatModel = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
 
           <IconButton
            display={{ base: "flex" }}
-           icon={<Close />}
-           onClick={()=> setIsOpen(true)}/>
+            onClick={() => setIsOpen(true)} >
+          <Close />
+        </IconButton>
           <DialogContent
             display="flex"
-            flexDir="column"
+            flexDirection="column"
             alignItems="center"
             fontFamily="Poppins"
           >

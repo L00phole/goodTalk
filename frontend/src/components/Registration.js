@@ -65,7 +65,6 @@ const Registration = () => {
       toast.error(error.response.data.message);
     }
   };
-console.log(values);
   return (
     <>
       <Stack spacing={1} marginBottom={4}>

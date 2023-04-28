@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
   Dialog,
-  Backdrop,
+   
   DialogContent,
   DialogTitle,
   DialogActions,
@@ -20,7 +20,7 @@ import { purple } from '@mui/material/colors';
 import { styled } from '@mui/material/styles';
 
 const GroupChatModal = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(false); // for modal
+  const [open, setOpen] = React.useState(false);
   const [groupChatName, setGroupChatName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [search, setSearch] = useState("");
@@ -59,7 +59,7 @@ const GroupChatModal = ({ children }) => {
 
     setSelectedUsers([...selectedUsers, userToAdd]);
   };
-
+ 
   const handleSubmit = async () => {
     if (!groupChatName || !selectedUsers) {
       toast.error("Please Fill Up All The Fields");
@@ -67,12 +67,12 @@ const GroupChatModal = ({ children }) => {
     }
 
     try {
-      const { data } = await api.post(`/api/chat/createRoom`, {
+      const { data } = await api.post(`/api/chat/createGroup`, {
         name: groupChatName,
         users: JSON.stringify(selectedUsers.map((u) => u._id)),
       });
       setChats([data, ...chats]);
-      setIsOpen(false);
+      setOpen(false);
       toast.success("SuccessFully Created New Group");
     } catch (error) {
       toast.error("Failed To Create Group");
@@ -87,32 +87,30 @@ const GroupChatModal = ({ children }) => {
   }));
   return (
     <>
-      <span onClick={()=> setIsOpen(true)}>{children}</span>
+      <span onClick={()=> setOpen(open)}>{children}</span>
 
-      <Dialog onClose={()=> setIsOpen(false)} isOpen={isOpen} isCentered>
-        <Backdrop />
+      <Dialog onClose={()=> setOpen(false)} open={open} isCentered>
+         
         <DialogContent>
           <DialogTitle
-            fontSize="35px"
-            display="flex"
-            justifyContent="center"
-            fontFamily="Poppins"
+            sx={{ fontSize: "35px", display: "flex", justifyContent: "center", fontFamily: "Poppins" }}
           >
             Create Group Chat
           </DialogTitle>
           <CloseIcon />
-          <DialogContent d="flex" flexDir="column" alignItems="center">
+          <DialogContent
+            sx={{ display: "flex", flexDirection: "column", alignItems: "center"}}>
             <FormControl>
               <Input
                 placeholder="Group Name"
-                mb={3}
+                sx={{ marginBottom: 3, }}
                 onChange={(e) => setGroupChatName(e.target.value)}
               />
             </FormControl>
             <FormControl>
               <Input
                 placeholder="Add Users:"
-                mb={1}
+                sx={{ marginBottom: 1, }}
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </FormControl>

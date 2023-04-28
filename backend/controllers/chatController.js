@@ -1,7 +1,10 @@
 import { StatusCodes } from "http-status-codes";
-import ChatRoom from "../models/RoomModel.js";
+import Chat from "../models/chatModel.js";
 import User from "../models/UserModel.js";
 
+import {
+  BadRequestError,
+} from "../errors/index.js";
 
 const getChat = async (req, res) => {
   const { userId } = req.body;
@@ -10,7 +13,7 @@ const getChat = async (req, res) => {
     return res.send("No User Exists!");
   }
 
-  let room = await ChatRoom.find({
+  let chat = await Chat.find({
     isGroupChat: false,
     $and: [
       { users: { $elemMatch: { $eq: req.user.id } } },
@@ -20,21 +23,21 @@ const getChat = async (req, res) => {
     .populate("users", "-password")
     .populate("latestMessage");
 
-  room = await User.populate(room, {
+  chat = await User.populate(chat, {
     path: "latestMessage.userID",
     select: "username email fullName _id",
   });
 
-  if (room.length > 0) {
-    res.send(room[0]);
+  if (chat.length > 0) {
+    res.send(chat[0]);
   } else {
-    const createChat = await ChatRoom.create({
-      roomName: "userID",
+    const createChat = await Chat.create({
+      chatName: "userID",
       isGroupChat: false,
       users: [req.user.id, userId],
     });
 
-    const fullChat = await ChatRoom.findOne({ _id: createChat._id }).populate(
+    const fullChat = await Chat.findOne({ _id: createChat._id }).populate(
       "users",
       "-password"
     );
@@ -44,13 +47,13 @@ const getChat = async (req, res) => {
 };
 
 const getChats = async (req, res) => {
-  const room = await ChatRoom.find({ users: { $elemMatch: { $eq: req.user.id } } })
+  const chat = await Chat.find({ users: { $elemMatch: { $eq: req.user.id } } })
     .populate("users", "-password")
     .populate("groupAdmin", "-password")
     .populate("latestMessage")
     .sort({ updatedAt: -1 });
 
-  const user = await User.populate(room, {
+  const user = await User.populate(chat, {
     path: "latestMessage.userID",
     select: "username email fullName _id",
   });
@@ -73,14 +76,14 @@ const createGroup = async (req, res) => {
 
   users.push(req.user.id);
 
-  const groupChat = await ChatRoom.create({
-    roomName: req.body.name,
+  const groupChat = await Chat.create({
+    chatName: req.body.name,
     users: users,
     isGroupChat: true,
     groupAdmin: req.user.id,
   });
 
-  const fullGroupChat = await ChatRoom.findOne({ _id: groupChat._id })
+  const fullGroupChat = await Chat.findOne({ _id: groupChat._id })
     .populate("users", "-password")
     .populate("groupAdmin", "-password");
 
@@ -88,12 +91,12 @@ const createGroup = async (req, res) => {
 };
 
 const renameGroup = async (req, res) => {
-  const { chatId, roomName } = req.body;
+  const { chatId, chatName } = req.body;
 
-  const updateChat = await ChatRoom.findByIdAndUpdate(
+  const updateChat = await Chat.findByIdAndUpdate(
     chatId,
     {
-      roomName: roomName,
+      chatName: chatName,
     },
     {
       new: true,
@@ -112,7 +115,7 @@ const renameGroup = async (req, res) => {
 const addUserToGroup = async (req, res) => {
   const { chatId, userId } = req.body;
 
-  const addUser = await ChatRoom.findByIdAndUpdate(
+  const addUser = await Chat.findByIdAndUpdate(
     chatId,
     {
       $push: { users: userId },
@@ -134,7 +137,7 @@ const addUserToGroup = async (req, res) => {
 const removeFromGroup = async (req, res) => {
   const { chatId, userId } = req.body;
 
-  const removeUser = await ChatRoom.findByIdAndUpdate(
+  const removeUser = await Chat.findByIdAndUpdate(
     chatId,
     {
       $pull: { users: userId },
