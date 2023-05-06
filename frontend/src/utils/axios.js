@@ -1,15 +1,12 @@
-
 import axios from "axios";
 import { getUserFromLocalStorage } from "./localstorage";
 
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API,
-});
+const api = axios.create();
 
 api.interceptors.request.use((config) => {
   const user = getUserFromLocalStorage();
   if (user) {
-    config.headers.common["Authorization"] = `Bearer ${user.token}`;
+    config.headers["Authorization"] = `Bearer ${user.token}`;
   }
   return config;
 });

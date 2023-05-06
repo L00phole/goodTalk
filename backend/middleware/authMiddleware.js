@@ -2,10 +2,9 @@ import jwt from "jsonwebtoken";
 import User from "../models/UserModel.js";
 import UnAuthenticatedError from "../errors/unauthenticated.js";
 
-
 // const auth = asyncHandler(async (req, res, next) => {
 // let token;
-  
+
 //   const authHeader = req.headers.authorization;
 //   if (!authHeader || !authHeader.startsWith("Bearer")) {
 //     throw new Error("Authentication Invalid");
@@ -37,8 +36,7 @@ const auth = async (req, res, next) => {
 
     next();
   } catch (error) {
-    throw new UnAuthenticatedError("Authentication Invalid");
+    throw new UnAuthenticatedError("Authentication Invalid 2");
   }
 };
 export default auth;
-

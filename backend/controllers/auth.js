@@ -9,13 +9,16 @@ import {
   UnAuthenticatedError,
 } from "../errors/index.js";
 
-
 const register = async (req, res) => {
-
-  await body("username").isLength({min : 3}).trim().notEmpty().escape().run(req);
+  await body("username")
+    .isLength({ min: 3 })
+    .trim()
+    .notEmpty()
+    .escape()
+    .run(req);
   await body("email").isEmail().normalizeEmail().run(req);
   await body("password").isLength({ min: 8 }).trim().escape().run(req);
-  
+
   // const errors = validationResult(req);
 
   // if (!errors.isEmpty()) {
@@ -43,6 +46,7 @@ const register = async (req, res) => {
     password: hashPassword,
   });
 
+  console.log("JWT_LIFETIME", process.env.JWT_LIFETIME);
   const token = jwt.sign(
     {
       userId: user._id,
@@ -51,7 +55,7 @@ const register = async (req, res) => {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: process.env.JWT_LIFETIME,
+      expiresIn: process.env.JWT_LIFETIME || "1d",
     }
   );
 
@@ -87,6 +91,7 @@ const login = async (req, res) => {
     );
   }
 
+  console.log("JWT_LIFETIME", process.env.JWT_LIFETIME);
   const token = jwt.sign(
     {
       userId: isUser._id,
@@ -95,7 +100,7 @@ const login = async (req, res) => {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: process.env.JWT_LIFETIME,
+      expiresIn: process.env.JWT_LIFETIME || "1d",
     }
   );
 
@@ -114,7 +119,7 @@ const searchUser = async (req, res) => {
   // if (!errors.isEmpty()) {
   //   return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
   // }
-  
+
   const { search } = req.query;
 
   const user = await User.find({
