@@ -24,7 +24,7 @@ app.use(helmet());
 app.use(xss());
 app.use(mongoSanitize());
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.send('Server running!');
 });
 
@@ -53,6 +53,7 @@ const start = async () => {
 
 const io = new Server(server, {
   pingTimeout: 60000,
+  path: '/api/socket.io',
   cors: {
     origin: '*',
   },

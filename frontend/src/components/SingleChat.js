@@ -65,7 +65,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   useEffect(() => {
-    socket = io(process.env.REACT_APP_SOCKET_ENDPOINT);
+    console.log('connect to websocket...?');
+    socket = io({
+      path: '/api/socket.io'
+    });
     socket.emit("setup", user);
     
     socket.on("connected", () => setSocketConnected(true));

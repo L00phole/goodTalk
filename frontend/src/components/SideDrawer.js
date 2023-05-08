@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
 	Menu,
 	Divider,
@@ -41,7 +41,8 @@ const SideDrawer = () => {
 	const [loading, setLoading] = useState(false);
 	const [loadingChat, setLoadingChat] = useState(false);
 	const [open, setOpen] = React.useState(false);
-
+	const buttonRef = useRef();
+	
 	const navigate = useNavigate();
 	const theme = useTheme();
 
@@ -102,14 +103,16 @@ const SideDrawer = () => {
 
 		try {
 			setLoading(true);
+			console.log('Searching....', search, api);
+			const { data } = await api.get(`/api/user/users`, { params: { search } });
 
-			const { data } = await api.get(`/api/user/users?search=${search}`);
-
+			console.log('Searched...', data);
 			setLoading(false);
 			setSearchResult(data);
 		} catch (error) {
 			toast.error(error);
 		}
+		console.log(searchResult);
 	};
 
 	const accessChat = async (userId) => {
@@ -172,9 +175,9 @@ const SideDrawer = () => {
 										color="inherit"
 										aria-label="open drawer"
 										onClick={handleOpen}
-										sx={{ mr: 2, ...(open && { display: "none" }) }}
+										sx={{ marginRight: 2,  }}
 									>
-										<MenuIcon sx={{ color: "#2E5CFF" }} fontSize="lg" />
+										<MenuIcon sx={{ color: "#2E5CFF" }} fontSize="large" />
 									</IconButton>
 								</Box>
 								<Box gridColumn="span 4">
@@ -191,7 +194,7 @@ const SideDrawer = () => {
 											<FiSearch sx={{ color: "#2E5CFF" }} />
 											<Typography
 												sx={{
-													display: { base: "none", md: "flex" },
+													display: { md: "flex" },
 													paddingLeft: 4,
 													paddingTop: 1,
 												}}
@@ -221,6 +224,7 @@ const SideDrawer = () => {
 								<Box gridColumn="span 1">
 									<IconButton
 										id="menu-button1"
+										ref={buttonRef}
 										aria-controls={menuOpen ? "menu-list1" : undefined}
 										aria-haspopup="true"
 										aria-expanded={menuOpen ? "true" : undefined}
@@ -233,7 +237,7 @@ const SideDrawer = () => {
 									</IconButton>
 									<Menu
 										id="menu-list1"
-										anchorEl={anchorEl}
+										anchorEl={buttonRef.current}
 										open={menuOpen}
 										onClose={handleCloseMenu}
 										MenuListProps={{ "aria-labelledby": "menu-button1" }}
@@ -266,6 +270,7 @@ const SideDrawer = () => {
 								<Box gridColumn="span 1" sx={{paddingTop: 1,}}>
 									<IconButton
 										id="menu-button2"
+										ref={buttonRef}
 										aria-controls={menuOpen ? "menu-list2" : undefined}
 										aria-haspopup="true"
 										aria-expanded={menuOpen ? "true" : undefined}
@@ -277,7 +282,7 @@ const SideDrawer = () => {
 									</IconButton>
 									<Menu
 										id="menu-list2"
-										anchorEl={anchorEl}
+										anchorEl={buttonRef.current}
 										open={menuOpen}
 										onClose={handleCloseMenu}
 										MenuListProps={{ "aria-labelledby": "menu-button2" }}
@@ -352,7 +357,7 @@ const SideDrawer = () => {
 								/>
 							))
 						)}
-						{loadingChat && <CirkularProgress ml="auto" d="flex" />}
+						{loadingChat && <CirkularProgress marginLeft="auto" display="flex" />}
 					</List>
 				</Drawer>
 			</Box>
