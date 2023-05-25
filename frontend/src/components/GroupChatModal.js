@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Dialog,
-   
   DialogContent,
   DialogTitle,
   DialogActions,
@@ -10,17 +9,17 @@ import {
   Input,
   Box,
 } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import api from "../utils/axios";
 import { useAppContext } from "../context/ChatProvider";
 import UserBadgeItem from "./UserBadge";
 import UserListItem from "./UserListItem";
 import { toast } from "react-toastify";
-import { purple } from '@mui/material/colors';
-import { styled } from '@mui/material/styles';
+import { purple } from "@mui/material/colors";
+import { styled } from "@mui/material/styles";
 
 const GroupChatModal = ({ children }) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [groupChatName, setGroupChatName] = useState();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [search, setSearch] = useState("");
@@ -59,7 +58,7 @@ const GroupChatModal = ({ children }) => {
 
     setSelectedUsers([...selectedUsers, userToAdd]);
   };
- 
+
   const handleSubmit = async () => {
     if (!groupChatName || !selectedUsers) {
       toast.error("Please Fill Up All The Fields");
@@ -81,36 +80,52 @@ const GroupChatModal = ({ children }) => {
   const ColorButton = styled(Button)(({ theme }) => ({
     color: theme.palette.getContrastText(purple[500]),
     backgroundColor: purple[500],
-    '&:hover': {
+    "&:hover": {
       backgroundColor: purple[700],
     },
   }));
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
   return (
     <>
-      <span onClick={()=> setOpen(open)}>{children}</span>
+      <span onClick={handleClick}>{children}</span>
 
-      <Dialog onClose={()=> setOpen(false)} open={open} isCentered>
-         
+      <Dialog open={open} isCentered>
         <DialogContent>
           <DialogTitle
-            sx={{ fontSize: "35px", display: "flex", justifyContent: "center", fontFamily: "Poppins" }}
+            sx={{
+              fontSize: "35px",
+              display: "flex",
+              justifyContent: "center",
+              fontFamily: "Poppins",
+            }}
           >
             Create Group Chat
           </DialogTitle>
-          <CloseIcon />
+          <Button onClick={handleClick}>
+            <CloseIcon />
+          </Button>
           <DialogContent
-            sx={{ display: "flex", flexDirection: "column", alignItems: "center"}}>
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
             <FormControl>
               <Input
                 placeholder="Group Name"
-                sx={{ marginBottom: 3, }}
+                sx={{ marginBottom: 3 }}
                 onChange={(e) => setGroupChatName(e.target.value)}
               />
             </FormControl>
             <FormControl>
               <Input
                 placeholder="Add Users:"
-                sx={{ marginBottom: 1, }}
+                sx={{ marginBottom: 1 }}
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </FormControl>
@@ -138,11 +153,7 @@ const GroupChatModal = ({ children }) => {
             )}
           </DialogContent>
           <DialogActions>
-            <ColorButton
-              onClick={handleSubmit}
-            >
-              Create Chat
-            </ColorButton>
+            <ColorButton onClick={handleSubmit}>Create Chat</ColorButton>
           </DialogActions>
         </DialogContent>
       </Dialog>

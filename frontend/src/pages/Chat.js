@@ -12,12 +12,10 @@ const Chat = () => {
       {user && <SideDrawer />}
       <Box
         sx={{
-          display: "flex",
-          marginTop: 4,
-          justifyContent: "space-between",
-          width: "100%",
-          height: "91.5vh",
-          padding: "10px",
+          display: "grid",
+          gridTemplateColumns: "auto 1fr",
+          height: { xs: "calc(100vh - 3.125rem)", sm: "calc(100vh - 3.75rem)" },
+          marginTop: { xs: "3.125rem", sm: "3.75rem" },
         }}
       >
         {user && <MyChats fetchAgain={fetchAgain} />}

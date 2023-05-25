@@ -53,7 +53,6 @@ start();
 
 const io = new Server(server, {
   pingTimeout: 60000,
-  path: "/api/socket.io",
   cors: {
     origin: "*",
   },

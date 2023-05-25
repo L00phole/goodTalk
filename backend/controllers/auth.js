@@ -18,12 +18,6 @@ const register = async (req, res) => {
     .notEmpty()
     .escape()
     .run(req);
-  await body("username")
-    .isLength({ min: 3 })
-    .trim()
-    .notEmpty()
-    .escape()
-    .run(req);
   await body("email").isEmail().normalizeEmail().run(req);
   await body("password").isLength({ min: 8 }).trim().escape().run(req);
 
@@ -63,7 +57,7 @@ const register = async (req, res) => {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: "1d",
+      expiresIn: process.env.JWT_LIFETIME || "1d",
     }
   );
 

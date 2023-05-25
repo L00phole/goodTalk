@@ -37,7 +37,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setLoading(true);
 
       const { data } = await api.get(`/api/message/${selectedChat._id}`);
-      console.log(data);
+      console.log("data", data);
       setMessages(data);
       setLoading(false);
       socket.emit("join-chat", selectedChat._id);
@@ -66,10 +66,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   useEffect(() => {
     console.log("connect to websocket...?");
-    socket = io("http://localhost:8080", {
-      transports: ["websocket"],
-      path: "/api/socket.io",
-    });
+    socket = io("http://localhost:8080");
     socket.emit("setup", user);
 
     socket.on("connected", () => setSocketConnected(true));
@@ -156,15 +153,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             )}
           </Typography>
           <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="flex-end"
-            p={3}
-            bg="#E8E8E8"
-            w="100%"
-            h="100%"
-            borderRadius="lg"
-            overflow="hidden"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              padding: 3,
+              background: "#E8E8E8",
+              width: "100%",
+              height: "100%",
+              overflow: "hidden",
+            }}
           >
             {loading ? (
               <CircularProgress size="xl" w={20} h={20} margin="auto" />

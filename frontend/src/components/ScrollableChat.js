@@ -1,12 +1,12 @@
-import { Tooltip } from "@mui/material";
 import React, { useRef, useEffect } from "react";
 import {
-  isLastMessage,
-  isSameSender,
   isSameSenderMargin,
   isSameUser,
+  isLastMessage,
+  isSameSender,
 } from "../config/chat";
 import { useAppContext } from "../context/ChatProvider";
+import { Tooltip, Typography } from "@mui/material";
 
 const ScrollableChat = ({ messages }) => {
   const { user } = useAppContext();
@@ -29,9 +29,13 @@ const ScrollableChat = ({ messages }) => {
             {(isSameSender(messages, m, i, user._id) ||
               isLastMessage(messages, i, user._id)) && (
               <Tooltip
-                label={m.sender.username}
+                title={m.sender.username}
                 placement="bottom-start"
+                hasArrow
               >
+                <Typography sx={{ backgroundColor: "white" }}>
+                  {m.sender.username}
+                </Typography>
               </Tooltip>
             )}
             <span

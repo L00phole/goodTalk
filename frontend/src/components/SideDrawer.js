@@ -40,7 +40,7 @@ const SideDrawer = () => {
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
   const theme = useTheme();
@@ -103,7 +103,7 @@ const SideDrawer = () => {
     try {
       setLoading(true);
       console.log("Searching....", search, api);
-      const { data } = await api.get(`/api/user/users`, { params: { search } });
+      const { data } = await api.get(`/api/user/users?search=${search}`);
 
       console.log("Searched...", data);
       setLoading(false);
@@ -325,6 +325,7 @@ const SideDrawer = () => {
                 placeholder="Search by name or email"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={handleSearch}
               />
               <Button sx={{ paddingLeft: 4 }} onClick={handleSearch}>
                 Go
