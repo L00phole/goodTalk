@@ -8,6 +8,7 @@ import {
   NotFoundError,
   UnAuthenticatedError,
 } from "../errors/index.js";
+
 import mongoose from "mongoose";
 
 const register = async (req, res) => {
@@ -17,8 +18,15 @@ const register = async (req, res) => {
     .notEmpty()
     .escape()
     .run(req);
+  await body("username")
+    .isLength({ min: 3 })
+    .trim()
+    .notEmpty()
+    .escape()
+    .run(req);
   await body("email").isEmail().normalizeEmail().run(req);
   await body("password").isLength({ min: 8 }).trim().escape().run(req);
+
   // const errors = validationResult(req);
 
   // if (!errors.isEmpty()) {
@@ -46,6 +54,7 @@ const register = async (req, res) => {
     password: hashPassword,
   });
 
+  console.log("JWT_LIFETIME", process.env.JWT_LIFETIME);
   const token = jwt.sign(
     {
       userId: user._id,
@@ -90,6 +99,7 @@ const login = async (req, res) => {
     );
   }
 
+  console.log("JWT_LIFETIME", process.env.JWT_LIFETIME);
   const token = jwt.sign(
     {
       userId: isUser._id,
@@ -98,7 +108,7 @@ const login = async (req, res) => {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: process.env.JWT_LIFETIME,
+      expiresIn: process.env.JWT_LIFETIME || "1d",
     }
   );
 
@@ -130,6 +140,13 @@ const login = async (req, res) => {
 //   res.status(StatusCodes.OK).json(user);
 // };
 const searchUser = async (req, res) => {
+  // await query("search").isLength({ min: 3 }).trim().escape().run(req);
+  // const errors = validationResult(req);
+
+  // if (!errors.isEmpty()) {
+  //   return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+  // }
+
   const { search } = req.query;
 
   let query = {
