@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import { BadRequestError } from "../errors/index.js";
 
 const errorHandler = (err, req, res, next) => {
   const defaultError = {
@@ -14,9 +15,15 @@ const errorHandler = (err, req, res, next) => {
   }
   if (err.code && err.code === 11000) {
     defaultError.statusCode = StatusCodes.BAD_REQUEST;
-    defaultError.msg = `${Object.keys(err.keyValue)} field has to be unique`;
+    const field = Object.keys(err.keyValue)[0];
+    const fieldValue = err.keyValue[field];
+    defaultError.msg = `${field} "${fieldValue}" already exists`;
   }
-
+  if (err instanceof BadRequestError) {
+    return res.status(err.statusCode).json({
+      error: err.message,
+    });
+  }
   res.status(defaultError.statusCode).json({ msg: defaultError.msg });
 };
-export default  errorHandler ;
+export default errorHandler;

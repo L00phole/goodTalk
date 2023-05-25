@@ -13,19 +13,13 @@ import mongoose from "mongoose";
 
 const register = async (req, res) => {
   await body("username")
-    .isLength({ min: 3 })
+    .isLength({ min: 8 })
     .trim()
     .notEmpty()
     .escape()
     .run(req);
   await body("email").isEmail().normalizeEmail().run(req);
   await body("password").isLength({ min: 8 }).trim().escape().run(req);
-
-  // const errors = validationResult(req);
-
-  // if (!errors.isEmpty()) {
-  //   return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
-  // }
 
   const { username, email, password } = req.body;
 
@@ -38,7 +32,11 @@ const register = async (req, res) => {
   if (isUserExists) {
     throw new BadRequestError("User with this Email Already Exists");
   }
+  const isUsernameExists = await User.findOne({ username: username }).lean();
 
+  if (isUsernameExists) {
+    throw new BadRequestError("User with this Username Already Exists");
+  }
   //hashing password
   const hashPassword = await bcrypt.hash(password, 10);
 
@@ -48,7 +46,6 @@ const register = async (req, res) => {
     password: hashPassword,
   });
 
-  console.log("JWT_LIFETIME", process.env.JWT_LIFETIME);
   const token = jwt.sign(
     {
       userId: user._id,
@@ -93,7 +90,6 @@ const login = async (req, res) => {
     );
   }
 
-  console.log("JWT_LIFETIME", process.env.JWT_LIFETIME);
   const token = jwt.sign(
     {
       userId: isUser._id,
@@ -114,33 +110,7 @@ const login = async (req, res) => {
   });
 };
 
-// const searchUser = async (req, res) => {
-//   // await query("search").isLength({ min: 3 }).trim().escape().run(req);
-//   // const errors = validationResult(req);
-
-//   // if (!errors.isEmpty()) {
-//   //   return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
-//   // }
-//   const { search } = req.query;
-
-//   const user = await User.find({
-//     $or: [
-//       { username: { $regex: search, $options: "i" } },
-//       { email: { $regex: search, $options: "i" } },
-//       { _id: search },
-//     ],
-//   }).select("username _id email ");
-
-//   res.status(StatusCodes.OK).json(user);
-// };
 const searchUser = async (req, res) => {
-  // await query("search").isLength({ min: 3 }).trim().escape().run(req);
-  // const errors = validationResult(req);
-
-  // if (!errors.isEmpty()) {
-  //   return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
-  // }
-
   const { search } = req.query;
 
   let query = {
