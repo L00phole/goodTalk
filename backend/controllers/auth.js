@@ -8,14 +8,17 @@ import {
   NotFoundError,
   UnAuthenticatedError,
 } from "../errors/index.js";
-
+import mongoose from "mongoose";
 
 const register = async (req, res) => {
-
-  await body("username").isLength({min : 3}).trim().notEmpty().escape().run(req);
+  await body("username")
+    .isLength({ min: 3 })
+    .trim()
+    .notEmpty()
+    .escape()
+    .run(req);
   await body("email").isEmail().normalizeEmail().run(req);
   await body("password").isLength({ min: 8 }).trim().escape().run(req);
-  
   // const errors = validationResult(req);
 
   // if (!errors.isEmpty()) {
@@ -51,7 +54,7 @@ const register = async (req, res) => {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: process.env.JWT_LIFETIME,
+      expiresIn: "1d",
     }
   );
 
@@ -107,25 +110,48 @@ const login = async (req, res) => {
   });
 };
 
-const searchUser = async (req, res) => {
-  // await query("search").isLength({ min: 3 }).trim().escape().run(req);
-  // const errors = validationResult(req);
+// const searchUser = async (req, res) => {
+//   // await query("search").isLength({ min: 3 }).trim().escape().run(req);
+//   // const errors = validationResult(req);
 
-  // if (!errors.isEmpty()) {
-  //   return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
-  // }
-  
+//   // if (!errors.isEmpty()) {
+//   //   return res.status(StatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+//   // }
+//   const { search } = req.query;
+
+//   const user = await User.find({
+//     $or: [
+//       { username: { $regex: search, $options: "i" } },
+//       { email: { $regex: search, $options: "i" } },
+//       { _id: search },
+//     ],
+//   }).select("username _id email ");
+
+//   res.status(StatusCodes.OK).json(user);
+// };
+const searchUser = async (req, res) => {
   const { search } = req.query;
 
-  const user = await User.find({
+  let query = {
     $or: [
       { username: { $regex: search, $options: "i" } },
       { email: { $regex: search, $options: "i" } },
-      { _id: search },
     ],
-  }).select("username _id email ");
+  };
 
-  res.status(StatusCodes.OK).json(user);
+  // Check if search is a valid ObjectId
+  if (mongoose.Types.ObjectId.isValid(search)) {
+    query.$or.push({ _id: search });
+  }
+
+  try {
+    const users = await User.find(query).select("username _id email");
+    res.status(StatusCodes.OK).json(users);
+  } catch (error) {
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
 };
 
 export { register, login, searchUser };

@@ -8,7 +8,7 @@ import mongoSanitize from "express-mongo-sanitize";
 import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import  errorHandler  from "./middleware/errorMiddleware.js";
+import errorHandler from "./middleware/errorMiddleware.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 import authenticateUser from "./middleware/authMiddleware.js";
 import connectDB from "./config/db.js";
@@ -24,18 +24,18 @@ app.use(helmet());
 app.use(xss());
 app.use(mongoSanitize());
 
-app.get('/api', (req, res) => {
-  res.send('Server running!');
+app.get("/api", (req, res) => {
+  res.send("Server running!");
 });
 
-app.use('/api/user', userRoute);
-app.use('/api/chat', authenticateUser, chatRoute);
-app.use('/api/message', authenticateUser, messageRoute);
+app.use("/api/user", userRoute);
+app.use("/api/chat", authenticateUser, chatRoute);
+app.use("/api/message", authenticateUser, messageRoute);
 
 app.use(errorHandler);
 app.use(notFoundMiddleware);
 
-const port = process.env.PORT || 8080;
+const port = 8080;
 
 const server = createServer(app);
 
@@ -44,18 +44,18 @@ const start = async () => {
     await connectDB(process.env.MONGO_URL);
     server.listen(port, () => {
       console.log(`Server started on PORT ${port}`.magenta.bold);
-    });} catch (e) {
-      console.log(e.message);
-    }
+    });
+  } catch (e) {
+    console.log(e.message);
   }
-  start();
-
+};
+start();
 
 const io = new Server(server, {
   pingTimeout: 60000,
-  path: '/api/socket.io',
+  path: "/api/socket.io",
   cors: {
-    origin: '*',
+    origin: "*",
   },
 });
 

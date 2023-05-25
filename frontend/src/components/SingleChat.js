@@ -1,4 +1,4 @@
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import {
   Box,
   FormControl,
@@ -32,12 +32,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const fetchMessages = useCallback(async () => {
     if (!selectedChat) return;
-  
+
     try {
       setLoading(true);
-  
+
       const { data } = await api.get(`/api/message/${selectedChat._id}`);
-  
+      console.log(data);
       setMessages(data);
       setLoading(false);
       socket.emit("join-chat", selectedChat._id);
@@ -65,12 +65,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   useEffect(() => {
-    console.log('connect to websocket...?');
-    socket = io({
-      path: '/api/socket.io'
+    console.log("connect to websocket...?");
+    socket = io("http://localhost:8080", {
+      transports: ["websocket"],
+      path: "/api/socket.io",
     });
     socket.emit("setup", user);
-    
+
     socket.on("connected", () => setSocketConnected(true));
 
     socket.on("typing", () => setIsTyping(true));
@@ -79,7 +80,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   useEffect(() => {
     fetchMessages();
-    
   }, [selectedChat, fetchMessages]);
 
   useEffect(() => {
@@ -164,22 +164,21 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             w="100%"
             h="100%"
             borderRadius="lg"
-            overflowY="hidden"
+            overflow="hidden"
           >
             {loading ? (
-              <CircularProgress
-                size="xl"
-                w={20}
-                h={20}
-                alignSelf="center"
-                margin="auto"
-              />
+              <CircularProgress size="xl" w={20} h={20} margin="auto" />
             ) : (
               <div className="message">
                 <ScrollableChat messages={messages} />
               </div>
             )}
-            <FormControl onKeyDown={sendMessage} h="15%" required={false} mt={3}>
+            <FormControl
+              onKeyDown={sendMessage}
+              h="15%"
+              required={false}
+              mt={3}
+            >
               {isTyping ? <div>Typing ...</div> : <></>}
               <Input
                 variant="filled"

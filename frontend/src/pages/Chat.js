@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAppContext } from "../context/ChatProvider";
 import { SideDrawer, MyChats, ChatBox } from "../components";
 import { Box } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { getUserFromLocalStorage } from "../utils/localstorage";
 
 const Chat = () => {
   const { user } = useAppContext();
   const [fetchAgain, setFetchAgain] = useState(false);
-  
-
-
 
   return (
     <div style={{ width: "100%" }}>

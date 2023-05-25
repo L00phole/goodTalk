@@ -2,9 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import Chat from "../models/chatModel.js";
 import User from "../models/UserModel.js";
 
-import {
-  BadRequestError,
-} from "../errors/index.js";
+import { BadRequestError } from "../errors/index.js";
 
 const getChat = async (req, res) => {
   const { userId } = req.body;
@@ -24,7 +22,7 @@ const getChat = async (req, res) => {
     .populate("latestMessage");
 
   chat = await User.populate(chat, {
-    path: "latestMessage.userID",
+    path: "latestMessage.sender",
     select: "username email fullName _id",
   });
 
@@ -32,7 +30,7 @@ const getChat = async (req, res) => {
     res.send(chat[0]);
   } else {
     const createChat = await Chat.create({
-      chatName: "userID",
+      chatName: "sender",
       isGroupChat: false,
       users: [req.user.id, userId],
     });
@@ -54,7 +52,7 @@ const getChats = async (req, res) => {
     .sort({ updatedAt: -1 });
 
   const user = await User.populate(chat, {
-    path: "latestMessage.userID",
+    path: "latestMessage.sender",
     select: "username email fullName _id",
   });
 
